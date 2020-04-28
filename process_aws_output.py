@@ -30,7 +30,8 @@ def get_end_times(speaker_label_items):
 
 def update_speaker(html, speaker_name, speaker_map=()):
     speaker = speaker_map[int(speaker_name[-1])]
-    html = append(html, '<p><b>{}: </b></p><p>'.format(speaker))
+    #html = append(html, '<p><b>{}: </b></p><p>'.format(speaker))
+    html = append(html, '<p><b>{}: </b>'.format(speaker))
     return html, speaker_name
 
 def append_token(html, line, separator=' '):
@@ -108,6 +109,8 @@ def run(fname):
 
             fname = line.pop(0)
             speakers = line.pop().split(',')
+            for i in range(len(speakers)):
+                speakers[i] = speakers[i].capitalize()
             job_name = parse_raw_transcription(fname, speakers)
             print('{}.html'.format(job_name))
             pypandoc.convert_file('{}.html'.format(job_name), 'docx', outputfile='{}.docx'.format(job_name))
