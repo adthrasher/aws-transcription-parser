@@ -1,4 +1,5 @@
 import json
+import pypandoc
 
 from collections import deque
 from functools import partial
@@ -95,6 +96,7 @@ def parse_raw_transcription(fname, speaker_names):
     lines = data['items']
     html = build_html(lines, end_times, job_name, speaker_names)
     write_to_file(html, job_name)
+    return job_name
 
 def append(html, text, separator='\n', postfix=''):
     return '{}{}{}{}'.format(html, separator, text, postfix)
@@ -106,7 +108,9 @@ def run(fname):
 
             fname = line.pop(0)
             speakers = line.pop().split(',')
-            parse_raw_transcription(fname, speakers)
+            job_name = parse_raw_transcription(fname, speakers)
+            print('{}.html'.format(job_name))
+            pypandoc.convert_file('{}.html'.format(job_name), 'docx', outputfile='{}.docx'.format(job_name))
 
     print("SUCCESS!")
 
